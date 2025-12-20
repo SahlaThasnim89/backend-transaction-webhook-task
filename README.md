@@ -1,110 +1,113 @@
-Transaction Webhook Processor
+# Transaction Webhook Processor
 
 A production-style backend service built with FastAPI, PostgreSQL, Celery, and Redis that receives transaction webhooks and processes them asynchronously.
 
-Architecture Overview
+# Overview
 
-Components
+This service demonstrates a real-world backend architecture for handling incoming webhooks and processing them in the background without blocking API responses.
 
-FastAPI – Receives webhooks and exposes query endpoints
+# Architecture-Components
 
-PostgreSQL – Persists transaction state
+FastAPI – Receives webhooks and exposes API endpoints
 
-Celery + Redis – Asynchronous background processing
+PostgreSQL – Persists transaction data and state
 
-Alembic – Database schema migrations
+Celery + Redis – Handles asynchronous background processing
 
-Docker Compose – Local orchestration
+Alembic – Manages database schema migrations
 
-Processing Flow
+Docker Compose – Orchestrates all services locally
+
+# Processing Flow
 
 Webhook received → transaction stored with status PENDING
 
-Celery task enqueued
+Celery task is enqueued
 
-Background task simulates processing (30s delay)
+Background worker simulates processing (30-second delay)
 
-Transaction updated to PROCESSED
+Transaction status updated to PROCESSED
 
-Tech Stack
+# Tech Stack
 
 Python 3.11
+
 FastAPI
+
 SQLAlchemy
+
 Alembic
+
 PostgreSQL
+
 Celery
+
 Redis
+
 Docker & Docker Compose
 
-#Prerequisites:-
+Prerequisites
+>>>>>>> 0ff0117e5dcf55bdad9f821c69d17771199c38ae
 
 Docker
 
 Docker Compose
 
-No local Python or database installation required.
+=======
+No local Python or database installation is required.
 
-Running the Service
-
-1. Build and start containers
-
-docker compose up --build -d
-
+# Getting Started
+Build and Start Services
+```docker compose up --build -d```
 
 This starts:
-
 API service
 
+=======
 PostgreSQL database
-
 Redis
-
 Celery worker
-
-Database Migrations (IMPORTANT)
-
-This project uses Alembic for schema management.
+Database Migrations
+This project uses Alembic for database schema management.
 
 First-Time Setup (Required)
 
-When running the project for the first time, database tables must be created:
+# On the first run, database tables must be created:
+```docker compose exec api alembic upgrade head```
 
-docker compose exec api alembic upgrade head
 
+This will:
 
-This command:
+Create all required tables (e.g. transactions)
 
-Creates all required tables (e.g. transactions)
-
-Initializes Alembic version tracking
+Initialize Alembic version tracking
 
 ⚠️ This step is required only once per fresh database.
 
-Normal Runs
+Normal Usage
 
-After migrations are applied, you can simply run:
-
-docker compose up
+After migrations are applied:
+```docker compose up```
+>>>>>>> 0ff0117e5dcf55bdad9f821c69d17771199c38ae
 
 
 No additional setup is required.
 
-Regenerating Migrations (Developer Use)
 
-If you modify SQLAlchemy models:
+# Regenerating Migrations (Development Only)
 
-docker compose exec api alembic revision --autogenerate -m "describe change"
-docker compose exec api alembic upgrade head
+If SQLAlchemy models are updated:
+```docker compose exec api alembic revision --autogenerate -m "describe change"```
+```docker compose exec api alembic upgrade head```
 
-API Usage
+# API Reference
+>>>>>>> 0ff0117e5dcf55bdad9f821c69d17771199c38ae
 Webhook Endpoint
 
 POST /webhook
 
-Example request:
-
-curl -X POST http://localhost:8000/webhook \
+Example Request
+curl -X POST http://localhost:8000/v1/webhooks/transactions \
   -H "Content-Type: application/json" \
   -d '{
     "transaction_id": "txn_001",
@@ -114,26 +117,23 @@ curl -X POST http://localhost:8000/webhook \
     "currency": "USD"
   }'
 
-
 Expected Behavior
 
-Immediately saved as PENDING
+Transaction is immediately saved with status PENDING
 
-Updated to PROCESSED after ~30 seconds by background worker
+Status is updated to PROCESSED after ~30 seconds by the background worker
 
 Transaction States
-
-PENDING – Received and queued
-
-PROCESSED – Successfully processed
-
+State	Description
+PENDING	Webhook received and queued for processing
+PROCESSED	Transaction successfully processed
 Design Considerations
 
-Asynchronous processing using Celery to keep API responsive
+Non-blocking API using asynchronous background processing
 
 Idempotent transaction handling
 
-Retry-safe background jobs
+Retry-safe Celery tasks
 
 Clear separation of concerns:
 
@@ -143,26 +143,20 @@ Database layer
 
 Background workers
 
-Production-like setup using Docker Compose
-
-Notes for Evaluators
-
-Database schema is versioned using Alembic
-
-Background processing is intentionally delayed to demonstrate async execution
-
-Dockerized setup ensures easy reproducibility
-
-Clean module separation avoids circular dependencies
+Dockerized setup for consistent and reproducible environments
 
 Stopping the Service
-docker compose down
+```docker compose down```
 
+Reset Everything (Including Database)
+```docker compose down -v```
 
-To reset everything (including database):
+# Notes for Evaluators
 
-docker compose down -v
+Database schema is versioned using Alembic
+Artificial delay demonstrates asynchronous execution
+Docker Compose ensures easy local setup and reproducibility
+Clean project structure avoids circular dependencies
 
 Author
-
 Sahla Thasnim
