@@ -47,7 +47,6 @@ Redis
 Docker & Docker Compose
 
 Prerequisites
->>>>>>> 0ff0117e5dcf55bdad9f821c69d17771199c38ae
 
 Docker
 
