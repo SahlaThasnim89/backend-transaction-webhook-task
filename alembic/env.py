@@ -2,10 +2,12 @@ from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
+from app.config import DATABASE_URL
+
 
 from alembic import context
 from app.database import Base
-from app import models
+from app.models import transaction
 
 
 # this is the Alembic Config object, which provides
@@ -42,7 +44,7 @@ def run_migrations_offline() -> None:
     script output.
 
     """
-    url = config.get_main_option("sqlalchemy.url")
+    url = config.get_main_option("sqlalchemy.url",DATABASE_URL)
     context.configure(
         url=url,
         target_metadata=target_metadata,

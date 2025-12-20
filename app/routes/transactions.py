@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from app.database import SessionLocal
-from app.models import Transaction
+from app.models.transaction import Transaction
 
 router = APIRouter()
 

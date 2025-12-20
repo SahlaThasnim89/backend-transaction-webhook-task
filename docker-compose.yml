@@ -10,7 +10,7 @@ services:
     build:
       context: .
       dockerfile: app/Dockerfile
-    command: celery -A app.tasks worker --loglevel=info
+    command: celery -A app.tasks.transaction worker --loglevel=info
     depends_on:
       - redis
 

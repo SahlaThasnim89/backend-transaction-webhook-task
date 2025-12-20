@@ -1,13 +1,11 @@
-from sqlalchemy import Column, Integer, String, Numeric, DateTime
+from sqlalchemy import Column, Integer, String, Numeric, DateTime, Float
 from sqlalchemy.sql import func
-
 from app.database import Base
-
 
 class Transaction(Base):
     __tablename__ = "transactions"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True,index=True)
 
     transaction_id = Column(
         String,
@@ -18,11 +16,10 @@ class Transaction(Base):
 
     source_account = Column(String, nullable=False)
     destination_account = Column(String, nullable=False)
-
-    amount = Column(Numeric(10, 2), nullable=False)
+    amount = Column(Float, nullable=False)
     currency = Column(String(3), nullable=False)
 
-    status = Column(String, index=True, nullable=False)
+    status = Column(String, nullable=False)
 
     created_at = Column(
         DateTime(timezone=True),
