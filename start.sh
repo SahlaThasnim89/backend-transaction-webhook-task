@@ -1,8 +1,20 @@
 #!/bin/bash
 set -e
 
-echo "Waiting for PostgreSQL..."
-until pg_isready -h db -p 5432 -U postgres; do
+# Port for API
+PORT=${PORT:-8000}
+
+# Postgres settings
+DB_HOST=${PGHOST:-db}          # 'db' for local Docker, PGHOST from Render
+DB_PORT=${PGPORT:-5432}        # 5432 default locally
+DB_USER=${PGUSER:-postgres}
+DB_PASSWORD=${PGPASSWORD:-postgres}
+DB_NAME=${PGDATABASE:-appdb}
+
+export PGPASSWORD="$DB_PASSWORD"  # required by pg_isready
+
+echo "Waiting for PostgreSQL at $DB_HOST:$DB_PORT..."
+until pg_isready -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER"; do
   echo "Postgres is unavailable - sleeping"
   sleep 2
 done
@@ -10,5 +22,6 @@ done
 echo "Running migrations..."
 alembic upgrade head
 
-echo "Starting API..."
-exec uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}
+echo "Starting API on port $PORT..."
+exec uvicorn app.main:app --host 0.0.0.0 --port "$PORT"
+
