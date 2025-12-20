@@ -1,9 +1,11 @@
 from celery import Celery
+from app.config import REDIS_URL
+
 
 celery = Celery(
     "worker",
-    broker="redis://redis:6379/0",
-    backend="redis://redis:6379/0",
+    broker=REDIS_URL,
+    backend=REDIS_URL,
 )
 
 celery.autodiscover_tasks(["app.tasks"])

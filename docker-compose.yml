@@ -5,17 +5,25 @@ services:
       dockerfile: app/Dockerfile
     ports:
       - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - redis
 
   worker:
     build:
       context: .
       dockerfile: app/Dockerfile
     command: celery -A app.tasks.transaction worker --loglevel=info
+    env_file:
+      - .env
     depends_on:
+      - db
       - redis
 
   db:
-    image: postgres:18
+    image: postgres:16
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
