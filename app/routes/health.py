@@ -3,7 +3,7 @@ from datetime import datetime
 
 router = APIRouter()
 
-@router.get("/health")
+@router.get("/")
 def health():
     return {
         "status":"HEALTHY",
