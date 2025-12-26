@@ -30,6 +30,7 @@ def handle_transaction_webhook(
         )
         db.add(txn)
         db.commit()
+        db.refresh(txn)
 
         process_transaction.delay(payload.transaction_id)
 
@@ -37,7 +38,7 @@ def handle_transaction_webhook(
         db.rollback()
         return {"ack": "duplicate ignored"}
 
-    return {"ack": "accepted"}
+    return txn
 
 
 
