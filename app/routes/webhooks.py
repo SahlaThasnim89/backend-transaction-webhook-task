@@ -36,9 +36,9 @@ def handle_transaction_webhook(
 
     except IntegrityError:
         db.rollback()
-        return {"ack": "duplicate ignored"}
+        return [{"ack": "duplicate ignored"}]
 
-    return txn
+    return [txn]
 
 
 
